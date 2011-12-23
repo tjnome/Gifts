@@ -98,10 +98,9 @@ public class Gifts extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (isPlayer(sender)) {
 			Player player = (Player) sender;
-			System.out.println(player.getName());
 			if (command.getName().equalsIgnoreCase("gift") || (command.getName().equalsIgnoreCase("gave"))) {
 				if (!(this.configuration.getGiftPlayers().contains(player.getName()))) {
-					if (player.getTargetBlock(null, 5) != null) {
+					if (player.getTargetBlock(null, 2) != null) {
 						Block block = player.getTargetBlock(null, 5).getRelative(BlockFace.UP);
 						if (block.getType() == Material.AIR) {
 							if (((block.getRelative(BlockFace.DOWN).getType() == Material.CHEST) || (block.getRelative(BlockFace.UP).getType() == Material.CHEST)
@@ -123,9 +122,6 @@ public class Gifts extends JavaPlugin {
 								}
 							}
 							this.configuration.getGiftPlayers().add(player.getName());
-							for (String dajen : this.configuration.getGiftPlayers()) {
-								System.out.println(dajen);
-							}
 							player.sendMessage(ChatColor.RED + colorTxt(this.configuration.onCommand));
 							return true;
 						} else {
@@ -138,9 +134,6 @@ public class Gifts extends JavaPlugin {
 					}
 				} else {
 					player.sendMessage(ChatColor.RED + colorTxt(this.configuration.playergift));
-					for (String dajen : this.configuration.getGiftPlayers()) {
-						System.out.println(dajen);
-					}
 					return true;
 				}
 			}
