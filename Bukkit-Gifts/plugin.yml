@@ -1,0 +1,13 @@
+name: Gifts
+main: gifts.tjnome.main.Gifts
+version: 1.0.0
+website: 'http://www.minecraft.no'
+authors: ['tjnome']
+description: Gifts Plugin
+commands:
+    gift:
+        aliases:
+        - gave
+        description: Give a gift.
+        usage: |
+               /<command>
