@@ -5,6 +5,7 @@ import gifts.tjnome.main.conf.GiftsConf;
 import java.util.Collections;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,6 +18,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import ru.tehkode.permissions.PermissionManager;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 /**
 *
@@ -99,42 +103,44 @@ public class Gifts extends JavaPlugin {
 		if (isPlayer(sender)) {
 			Player player = (Player) sender;
 			if (command.getName().equalsIgnoreCase("gift") || (command.getName().equalsIgnoreCase("gave"))) {
-				if (!(this.configuration.getGiftPlayers().contains(player.getName()))) {
-					if (player.getTargetBlock(null, 2) != null) {
-						Block block = player.getTargetBlock(null, 5).getRelative(BlockFace.UP);
-						if (block.getType() == Material.AIR) {
-							if (((block.getRelative(BlockFace.DOWN).getType() == Material.CHEST) || (block.getRelative(BlockFace.UP).getType() == Material.CHEST)
-									|| (block.getRelative(BlockFace.NORTH).getType() == Material.CHEST) || (block.getRelative(BlockFace.SOUTH).getType() == Material.CHEST) 
-									|| (block.getRelative(BlockFace.WEST).getType() == Material.CHEST) || (block.getRelative(BlockFace.EAST).getType() == Material.CHEST))) {
-								player.sendMessage(ChatColor.RED + this.configuration.chestclose);
+				if (checkpermissions(player, "gift")) {
+					if (!(this.configuration.getGiftPlayers().contains(player.getName()))) {
+						if (player.getTargetBlock(null, 2) != null) {
+							Block block = player.getTargetBlock(null, 5).getRelative(BlockFace.UP);
+							if (block.getType() == Material.AIR) {
+								if (((block.getRelative(BlockFace.DOWN).getType() == Material.CHEST) || (block.getRelative(BlockFace.UP).getType() == Material.CHEST)
+										|| (block.getRelative(BlockFace.NORTH).getType() == Material.CHEST) || (block.getRelative(BlockFace.SOUTH).getType() == Material.CHEST) 
+										|| (block.getRelative(BlockFace.WEST).getType() == Material.CHEST) || (block.getRelative(BlockFace.EAST).getType() == Material.CHEST))) {
+									player.sendMessage(ChatColor.RED + this.configuration.chestclose);
+									return true;
+								}
+								block.setType(Material.CHEST);
+								Chest chest = (Chest) block.getState();
+								for (int i = 0; i < chest.getInventory().getSize(); i++) {
+									Random r = new Random(); 
+									int gift = r.nextInt(100);
+									if (gift <= this.configuration.prosent) {
+										int amount = r.nextInt(64);
+										Collections.shuffle(this.configuration.getGiftItems());
+										ItemStack item = new ItemStack(this.configuration.getGiftItems().get(0), amount);
+										chest.getInventory().addItem(item);
+									}
+								}
+								this.configuration.getGiftPlayers().add(player.getName());
+								player.sendMessage(ChatColor.RED + colorTxt(this.configuration.onCommand));
+								return true;
+							} else {
+								player.sendMessage(ChatColor.RED + colorTxt(this.configuration.noSpace));
 								return true;
 							}
-							block.setType(Material.CHEST);
-							Chest chest = (Chest) block.getState();
-							for (int i = 0; i < chest.getInventory().getSize(); i++) {
-								Random r = new Random(); 
-								int gift = r.nextInt(100);
-								if (gift <= this.configuration.prosent) {
-									int amount = r.nextInt(64);
-									Collections.shuffle(this.configuration.getGiftItems());
-									ItemStack item = new ItemStack(this.configuration.getGiftItems().get(0), amount);
-									chest.getInventory().addItem(item);
-								}
-							}
-							this.configuration.getGiftPlayers().add(player.getName());
-							player.sendMessage(ChatColor.RED + colorTxt(this.configuration.onCommand));
-							return true;
 						} else {
-							player.sendMessage(ChatColor.RED + colorTxt(this.configuration.noSpace));
+							player.sendMessage(ChatColor.RED + colorTxt(this.configuration.badAim));
 							return true;
 						}
 					} else {
-						player.sendMessage(ChatColor.RED + colorTxt(this.configuration.badAim));
+						player.sendMessage(ChatColor.RED + colorTxt(this.configuration.playergift));
 						return true;
 					}
-				} else {
-					player.sendMessage(ChatColor.RED + colorTxt(this.configuration.playergift));
-					return true;
 				}
 			}
 		}
@@ -148,5 +154,24 @@ public class Gifts extends JavaPlugin {
 			return false;
 		}
 	}
-
+	
+	public boolean checkpermissions(Player player, String action) {
+		if (this.configuration.permissions) {
+			if (!Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")) {
+				if (player.hasPermission("Gift." + action)) {
+				return true;
+				}
+			} else {
+				if (Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")) {
+					PermissionManager permissions = PermissionsEx.getPermissionManager();
+					if (permissions.has(player, "Gift." + action)) {	
+						return true;
+					}
+				}
+			}
+		} else {
+			return true;
+		}
+	return false;
+	}
 }

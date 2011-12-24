@@ -50,6 +50,7 @@ public class GiftsConf {
 	public String chestclose;
 	public String playergift;
 	public int prosent;
+	public boolean permissions;
 	
 
 	@SuppressWarnings("unchecked")
@@ -68,6 +69,7 @@ public class GiftsConf {
 		this.configDefaults.put("Server.gifts.bad-aim", "You have to aim at a block no more than 5 blocks away.");
 		this.configDefaults.put("Server.gifts.already-got-gift", "You have already got a gift for christmas");
 		this.configDefaults.put("Server.gifts.prosent", 20);
+		this.configDefaults.put("Server.permissions", true);
 		
 		if (!this.configFile.exists()) {
 			for (String key : this.configDefaults.keySet()) {
@@ -95,6 +97,7 @@ public class GiftsConf {
 		this.chestclose = config.getString("Server.gifts.chest-close");
 		this.playergift = config.getString("Server.gifts.already-got-gift");
 		this.prosent = config.getInt("Server.gifts.prosent");
+		this.permissions = config.getBoolean("Server.permissions");
 	}
 	
 	public void cleanup() throws Exception {
