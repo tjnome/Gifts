@@ -8,6 +8,6 @@ commands:
     gift:
         aliases:
         - gave
-        description: Give a gift.
+        description: Set out a chest with goodies inside.
         usage: |
                /<command>
