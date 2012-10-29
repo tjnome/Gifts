@@ -19,8 +19,8 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import ru.tehkode.permissions.PermissionManager;
-import ru.tehkode.permissions.bukkit.PermissionsEx;
+//import ru.tehkode.permissions.PermissionManager;
+//import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 /**
 *
@@ -99,7 +99,7 @@ public class Gifts extends JavaPlugin {
         return string;
     }
 	
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(PlayerCommandPreprocessEvent event, CommandSender sender, Command command, String label, String[] args) {
 		if (isPlayer(sender)) {
 			Player player = (Player) sender;
 			if (command.getName().equalsIgnoreCase("gift") || (command.getName().equalsIgnoreCase("gave"))) {
@@ -157,18 +157,9 @@ public class Gifts extends JavaPlugin {
 	
 	public boolean checkpermissions(Player player, String action) {
 		if (this.configuration.permissions) {
-			if (!Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")) {
-				if (player.hasPermission("Gift." + action)) {
+			if (event.getPlayer().hasPermission("Gift." + action)) {
 				return true;
 				}
-			} else {
-				if (Bukkit.getServer().getPluginManager().isPluginEnabled("PermissionsEx")) {
-					PermissionManager permissions = PermissionsEx.getPermissionManager();
-					if (permissions.has(player, "Gift." + action)) {	
-						return true;
-					}
-				}
-			}
 		} else {
 			return true;
 		}
