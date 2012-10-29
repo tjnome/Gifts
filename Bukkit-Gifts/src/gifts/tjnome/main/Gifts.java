@@ -5,7 +5,6 @@ import gifts.tjnome.main.conf.GiftsConf;
 import java.util.Collections;
 import java.util.Random;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,6 +13,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -157,12 +157,10 @@ public class Gifts extends JavaPlugin {
 	
 	public boolean checkpermissions(Player player, String action) {
 		if (this.configuration.permissions) {
-			if (event.getPlayer().hasPermission("Gift." + action)) {
+			if (player.hasPermission("Gift." + action)) {
 				return true;
-				}
-		} else {
-			return true;
+			}
 		}
-	return false;
+		return false;
 	}
 }
