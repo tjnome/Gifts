@@ -1,6 +1,6 @@
 name: Gifts
 main: gifts.tjnome.main.Gifts
-version: 1.0.5
+version: 1.0.6
 website: 'http://www.minecraft.no'
 authors: ['tjnome']
 description: Gifts Plugin
