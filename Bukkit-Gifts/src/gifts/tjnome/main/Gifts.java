@@ -63,7 +63,7 @@ public class Gifts extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		System.out.println("Gifts disablet!");
+		System.out.println("Gifts disabled!");
 		try {
 			configuration.cleanup();
 		} catch (Exception e) {
@@ -156,11 +156,11 @@ public class Gifts extends JavaPlugin {
 	}
 	
 	public boolean checkpermissions(Player player, String action) {
-		if (this.configuration.permissions) {
-			if (player.hasPermission("Gift." + action)) {
+		//if (this.configuration.permissions) {
+			if (player.hasPermission("Gifts." + action)) {
 				return true;
 			}
-		}
+		//}
 		return false;
 	}
 }
